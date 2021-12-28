@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" version="1.0.1">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>geogkary / parakratisi.js</title>
+    </head>
+    <body>
+        <main class="pace-component">
+            <section class="calculator d-print-none pt-2 mb-2">
+                <div class="container">
+                    <div class="row border bg-white rounded mt-3 pt-4 pb-4">
+                        <div class="col col-12 text-center pb-5">
+                            <h6>Συμπλήρωσε <strong>ένα</strong> από τα πεδία.</h6>
+                        </div>
+                        <div class="col col-12 col-lg-3">
+                            <label data-toggle="tooltip" data-placement="top" title="Συμπλήρωσε το καθαρό ποσό χωρίς ΦΠΑ.">Τι συμφώνησες; <i class="fas fa-question-circle"></i></label>
+                            <input id="amountClean" type="number" class="form-control" />
+                            <small class="form-text text-muted">ΚΑΘΑΡΟ</small>
+                        </div>
+                        <div class="col d-none">
+                            <label>Φ.Ε. <i class="fas fa-question-circle"></i></label>
+                            <input disabled id="amountIncome" type="number" class="form-control disabled" />
+                        </div>
+                        <div class="col d-none">
+                            <label>Φ.Π.Α. </label>
+                            <input disabled id="amountTax" type="number" class="form-control disabled" />
+                        </div>
+                        <div class="col col-12 col-lg-3 mt-3 mt-lg-0">
+                            <label data-toggle="tooltip" data-placement="top" title="Συμπλήρωσε το συνολικό ποσό του τιμολογίου.">Τι τιμολόγησες; <i class="fas fa-question-circle"></i></label>
+                            <input id="amountInvoice" type="number" class="form-control" />
+                            <small class="form-text text-muted">ΤΙΜΟΛΟΓΙΟ (+ ΦΠΑ 24%)</small>
+                        </div>
+                        <div class="col col-12 col-lg-3 mt-3 mt-lg-0">
+                            <label data-toggle="tooltip" data-placement="top" title="Συμπλήρωσε το ποσό το οποίο έλαβες.">Τι πληρώθηκες; <i class="fas fa-question-circle"></i></label>
+                            <input id="amountPaid" type="number" class="form-control" />
+                            <small class="form-text text-muted">ΠΛΗΡΩΤΕΟ (- ΦΕ 20%)</small>
+                        </div>
+                        <div class="col col-12 col-lg-3 mt-3 mt-lg-0">
+                            <label data-toggle="tooltip" data-placement="top" title="Συμπλήρωσε το ποσό που θέλεις να μείνει τσέπη.">Τι θα μείνει; <i class="fas fa-question-circle"></i></label>
+                            <input id="amountFinal" type="number" class="form-control" />
+                            <small class="form-text text-muted">ΤΕΛΙΚΟ (- ΦΠΑ 24%)</small>
+                        </div>
+                        <div class="col col-12 text-center pt-4">
+                            <p>Η παρακράτηση φόρου 20% ανέρχεται στα <strong><span id="flagIncome">0,00</span>€</strong> και ο Φ.Π.Α. 24% στα <strong><span id="flagTax">0,00</span>€</strong>.</p>
+                        </div>
+                        <div class="col col-12 text-center pt-5 d-none d-lg-block">
+                            <button id="amountsCollect" type="button" class="btn btn-dark">Προσθήκη Υπολογισμού</button>
+                            <div class="invalid-feedback pt-3" id="amountsError">
+                                Πρέπει να συμπληρώσεις ένα σωστό υπολογισμό (> 0).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="records pb-5 mb-5 d-none d-print-block d-lg-block">
+                <div class="container">
+                    <div class="row border border-bottom-2 rounded">
+                        <div class="col col-12">
+                            <div class="row border-bottom text-right bg-white">
+                                <div class="col col-2 pt-2 pb-2 border-right">
+                                    <strong>#</strong>
+                                </div>
+                                <div class="col pt-2 pb-2 border-right">
+                                    <strong>ΚΑΘΑΡΟ</strong>
+                                </div>
+                                <div class="col pt-2 pb-2 border-right">
+                                    <strong>Φ.Ε. 20%</strong>
+                                </div>
+                                <div class="col pt-2 pb-2 border-right">
+                                    <strong>Φ.Π.Α. 24%</strong>
+                                </div>
+                                <div class="col pt-2 pb-2 border-right">
+                                    <strong>ΤΙΜΟΛΟΓΙΟ</strong>
+                                </div>
+                                <div class="col pt-2 pb-2 border-right">
+                                    <strong>ΠΛΗΡΩΤΕΟ</strong>
+                                </div>
+                                <div class="col pt-2 pb-2">
+                                    <strong>ΤΕΛΙΚΟ</strong>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col col-12">
+                            <div class="row border-bottom text-right bg-white">
+                                <div class="col col-2 pt-2 pb-2 border-right">
+                                    <strong>ΣΥΝΟΛΟ</strong>
+                                </div>
+                                <div class="col pt-2 pb-2 border-right">
+                                    <strong><span class="totalClean">0,00</span>€</strong>
+                                </div>
+                                <div class="col pt-2 pb-2 border-right">
+                                    <strong><span class="totalIncome">0,00</span>€</strong>
+                                </div>
+                                <div class="col pt-2 pb-2 border-right">
+                                    <strong><span class="totalTax">0,00</span>€</strong>
+                                </div>
+                                <div class="col pt-2 pb-2 border-right">
+                                    <strong><span class="totalInvoice">0,00</span>€</strong>
+                                </div>
+                                <div class="col pt-2 pb-2 border-right">
+                                    <strong><span class="totalPaid">0,00</span>€</strong>
+                                </div>
+                                <div class="col pt-2 pb-2">
+                                    <strong><span class="totalFinal">0,00</span>€</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row border border-top-0 border-bottom-0">
+                        <div class="col col-12" id="table">
+                        </div>
+                    </div>
+                    <div id="table"></div>
+                    <div class="row border border-top-2 border-bottom-0 rounded">
+                        <div class="col col-12">
+                            <div class="row border-bottom text-right bg-white">
+                                <div class="col col-2 pt-2 pb-2 border-right">
+                                    <strong>ΣΥΝΟΛΟ</strong>
+                                </div>
+                                <div class="col pt-2 pb-2 border-right">
+                                    <strong><span class="totalClean">0,00</span>€</strong>
+                                </div>
+                                <div class="col pt-2 pb-2 border-right">
+                                    <strong><span class="totalIncome">0,00</span>€</strong>
+                                </div>
+                                <div class="col pt-2 pb-2 border-right">
+                                    <strong><span class="totalTax">0,00</span>€</strong>
+                                </div>
+                                <div class="col pt-2 pb-2 border-right">
+                                    <strong><span class="totalInvoice">0,00</span>€</strong>
+                                </div>
+                                <div class="col pt-2 pb-2 border-right">
+                                    <strong><span class="totalPaid">0,00</span>€</strong>
+                                </div>
+                                <div class="col pt-2 pb-2">
+                                    <strong><span class="totalFinal">0,00</span>€</strong>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col col-12 text-center pt-3 d-print-none">
+                        <button disabled id="tablePrint" type="button" class="btn btn-primary">Λήψη Υπολογισμών</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+        <footer class="pt-5 pb-5 border-top d-print-none pace-component">
+            <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;700&display=swap" rel="stylesheet" />
+            <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous" />
+            <link rel="stylesheet" href="assets/css/fa.min.css" />
+            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+            <script src="./min.js"></script>
+            <style>
+                html,
+                body {
+                    font-family: 'Roboto', sans-serif;
+                    font-weight: 300;
+                    cursor: default;
+                    background: #f9f9f9;
+                }
+                strong {
+                    font-weight: 700;
+                }
+                section.records {
+                    cursor: text;
+                }
+                p {
+                    font-size: 14px;
+                    line-height: 22px;
+                }
+
+                @media only print {
+                    header p {
+                        display: none;
+                    }
+                    section.records {
+                        padding-top: 35px;
+                    }
+                    section.records,
+                    section.records input {
+                        font-size: 13px !important;
+                        line-height: 13px !important;
+                    }
+                }
+            </style>
+        </footer>
+    </body>
+</html>
